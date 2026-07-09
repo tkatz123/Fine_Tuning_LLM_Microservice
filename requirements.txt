@@ -1,0 +1,15 @@
+# --- Week 7: data prep (runs locally, lightweight) ---
+pandas
+python-dotenv
+tqdm
+pydantic          # define + validate the extraction JSON schema
+anthropic         # strong LLM to bootstrap draft labels
+
+# --- Weeks 8+: fine-tuning (runs on a cloud GPU, NOT this laptop) ---
+# Installed in the cloud training environment, kept here for reference:
+# torch
+# transformers
+# peft              # LoRA / QLoRA
+# datasets
+# accelerate
+# bitsandbytes      # 4-bit quantization for QLoRA
