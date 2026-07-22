@@ -28,7 +28,7 @@ def extract_one(job_description: str) -> JobExtraction:
 
 def main(limit = None):
     df = pd.read_csv("data/raw/AI_Engineer_Job_Data.csv")
-    df.columns = [c.lstrip("\eufeff") for c in df.columns] #Strips the BOM off 'company"
+    df.columns = [c.lstrip("\ufeff") for c in df.columns] #Strips the BOM off 'company"
     if limit:
         df = df.head(limit)
 

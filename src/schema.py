@@ -10,6 +10,6 @@ class Seniority(str, Enum):
 
 class JobExtraction(BaseModel):
     required_skills: list[str]
-    tech_stack: list[str]
+    tech_stack: list[str] | None = None
     seniority: Seniority
     avg_comp_range: int | None = None
