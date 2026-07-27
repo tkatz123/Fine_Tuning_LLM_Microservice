@@ -1,5 +1,7 @@
 import statistics
 import json
+from pydantic import ValidationError
+from src.schema import JobExtraction
 
 def score_seniority(predicted: str, true: str) -> float:
 
@@ -99,6 +101,12 @@ def evaluate(predictions: list[dict], true: list[dict]) -> dict:
         'skills': statistics.mean(skills_scores),
         'tech_stack': statistics.mean(tech_scores)
     }
+
+def validate_prediction(pred: dict) -> dict | None:
+    try:
+        return JobExtraction(**pred).model_dump(mode = "json")
+    except (ValidationError, TypeError):
+        return None
 
 if __name__ == "__main__":
 
