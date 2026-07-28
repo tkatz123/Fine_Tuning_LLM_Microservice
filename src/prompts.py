@@ -2,10 +2,10 @@
 
 EXTRACTION_PROMPT = """You are an agent that extracts key information from AI Engineering job postings. You must output the key information from these job postings in a JSON format with the following fields:
 
-required_skills: list of strings
+required_skills: list of strings. required_skills are competencies only. Any named language, library, framework, tool, cloud, or database (e.g. Python, SQL, PyTorch, AWS, Docker) belongs in tech_stack, NOT required_skills.
 tech_stack: list of strings. Can be null if tech stack is not defined.
 seniority: enum value that can ONLY be one of five string options - 'junior', 'mid', 'senior', 'lead', or 'unknown' if it is unlisted in the job posting. You CANNOT use any other value for this field
-avg_comp_range: A single integer value that is either the exact salary listed, or an average of the salary range. This field can also be set to null if no salary is listed in the job posting
+avg_comp_range: A single integer value that is either the exact salary listed, or an average of the salary range. This field can also be set to null if no salary is listed in the job posting. If the salary is an hourly rate, annualize it as hourly × 2080 (40 hrs/week × 52 weeks). avg_comp_range is always an annual figure.
 
 Here are three example JSON outputs:
 
@@ -24,12 +24,12 @@ Here are three example JSON outputs:
 }
 
 {
-  "required_skills": ["Vector Databases", "Semantic Search"],
+  "required_skills": ["semantic search", "retrieval system design"],
   "tech_stack": null,
   "seniority": "mid",
   "avg_comp_range": 140000
 }
 
-Remember for seniority it can ONLY be one of five enumerate string values, and avg_comp_range MUST be a single integer that is either the exact salary if listed, or an average of the salary range if listed, if salary is not mentioned the field can be set to null.
+Remember for seniority it can ONLY be one of five enumerate string values, and avg_comp_range MUST be a single integer that is either the exact salary if listed, or an average of the salary range if listed, if salary is not mentioned the field can be set to null. Remember: named languages, libraries, frameworks, tools, clouds, and databases go in tech_stack, never required_skills.
 
 Output ONLY the JSON object. No explanation, no markdown, no code fences - the first character of your reply must be {."""

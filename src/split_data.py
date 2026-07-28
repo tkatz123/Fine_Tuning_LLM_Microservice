@@ -18,7 +18,7 @@ with open("data/interim/labels_draft.jsonl", "r") as f:
 random.shuffle(job_data)
 
 #splitting records into train/val/test
-#70/15/15 respectively
+#131/28/29 respectively
 n_train = int(0.70 * len(job_data))
 n_val = int(0.15 * len(job_data))
 

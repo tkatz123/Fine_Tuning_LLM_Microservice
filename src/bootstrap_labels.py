@@ -4,13 +4,14 @@ from dotenv import load_dotenv
 import json
 from pydantic import ValidationError
 from pathlib import Path
+from tqdm import tqdm
 import argparse
 from src.schema import JobExtraction
 from src.prompts import EXTRACTION_PROMPT
 
 load_dotenv()
 
-client = Anthropic()
+client = Anthropic(max_retries = 5)
 
 def extract_one(job_description: str) -> JobExtraction:
     resp = client.messages.create(
@@ -20,7 +21,12 @@ def extract_one(job_description: str) -> JobExtraction:
         messages = [{"role": "user", "content": job_description}]
     )
 
-    output = resp.content[0].text.strip()
+    raw = resp.content[0].text.strip()
+
+    #Strips out JSON before validating incase any code fences are added
+    a, b = raw.find("{"), raw.rfind("}")
+
+    output = raw[a:b + 1]
 
     job_extraction = JobExtraction.model_validate_json(output)
 
@@ -32,10 +38,15 @@ def main(limit = None):
     if limit:
         df = df.head(limit)
 
+    #Quick data cleaning
+    df = df.drop_duplicates(subset = 'job_description')
+    df['company'] = df['company'].str.strip()
+    df['job_title'] = df['job_title'].str.strip()
+
     valid_records = []
     failed_records = []
 
-    for idx, row in df.iterrows():
+    for idx, row in tqdm(df.iterrows(), total = len(df)):
         try:
             extracted_job = extract_one(str(row['job_description']))
             record = {"id": int(idx), "company": row["company"], "job_title": row["job_title"], **extracted_job.model_dump()} #Converts pydantic object into dictionary
