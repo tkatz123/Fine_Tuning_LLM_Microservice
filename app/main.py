@@ -25,7 +25,7 @@ def extract_endpoint(req: ExtractionRequest):
 
     #Handles error if pydantic check returns none
     if result is None:
-        raise HTTPException(status_code = 422, detail = "Could not extract structed data from this posting.")
+        raise HTTPException(status_code = 422, detail = "Could not extract structured data from this posting.")
     
     return result
 
