@@ -6,6 +6,8 @@ pydantic          # define + validate the extraction JSON schema
 anthropic         # strong LLM to bootstrap draft labels
 fastapi
 uvicorn
+torch
+transformers
 
 # --- Weeks 8+: fine-tuning (runs on a cloud GPU, NOT this laptop) ---
 # Installed in the cloud training environment, kept here for reference:
