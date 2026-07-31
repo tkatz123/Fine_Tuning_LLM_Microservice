@@ -224,3 +224,5 @@ CLAUDE.md
 original_LLM_fine_tuning.ipynb
 # Large model artifacts (baked into Docker image, not git)
 models/
+
+job-extractor-key.pem

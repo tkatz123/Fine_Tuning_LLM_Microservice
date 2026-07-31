@@ -1,0 +1,3 @@
+# Test/dev dependencies (used by CI to run pytest)
+pytest
+pydantic          # the code under test imports src.schema (pydantic)
