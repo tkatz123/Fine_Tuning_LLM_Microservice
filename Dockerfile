@@ -6,10 +6,6 @@ COPY requirements-service.txt .
 
 RUN pip install --no-cache-dir -r requirements-service.txt
 
-COPY models/ ./models/
-
-ENV LLAMA_MODEL_PATH=/app/models/qwen-q4km.gguf
-
 COPY app/ ./app/
 
 COPY src/ ./src/

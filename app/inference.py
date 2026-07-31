@@ -1,13 +1,15 @@
 import json
-import os
 from llama_cpp import Llama
 from src.prompts import EXTRACTION_PROMPT
 from src.schema import JobExtraction
 from src.evaluation import validate_prediction
 
-LLAMA_MODEL_PATH = os.environ.get("LLAMA_MODEL_PATH", "/Users/tylerkatz/gguf-work/qwen-q4km.gguf")
-
-llm = Llama(model_path = LLAMA_MODEL_PATH, n_ctx = 4096, verbose = False)
+llm = Llama.from_pretrained(
+    repo_id = "tkatz123/qwen2.5-3b-job-extraction-gguf",
+    filename = "qwen2.5-3b-job-extraction-Q4_K_M.gguf",
+    n_ctx = 4096,
+    verbose = False,
+)
 
 def generate_raw(job_description, max_new_tokens = 1024):
     resp = llm.create_chat_completion(
