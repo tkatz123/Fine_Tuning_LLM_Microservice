@@ -2,10 +2,13 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-COPY requirements.txt .
+COPY requirements-service.txt .
 
-RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu
-RUN pip install --no-cache-dir -r requirements.txt 
+RUN pip install --no-cache-dir -r requirements-service.txt
+
+COPY models/ ./models/
+
+ENV LLAMA_MODEL_PATH=/app/models/qwen-q4km.gguf
 
 COPY app/ ./app/
 

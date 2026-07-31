@@ -1,34 +1,24 @@
 import json
-import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer
+import os
+from llama_cpp import Llama
 from src.prompts import EXTRACTION_PROMPT
 from src.schema import JobExtraction
 from src.evaluation import validate_prediction
 
-MODEL_ID = "tkatz123/qwen2.5-3b-job-extraction-merged"
+LLAMA_MODEL_PATH = os.environ.get("LLAMA_MODEL_PATH", "/Users/tylerkatz/gguf-work/qwen-q4km.gguf")
 
-tokenizer = AutoTokenizer.from_pretrained(MODEL_ID)
-model = AutoModelForCausalLM.from_pretrained(MODEL_ID, torch_dtype = torch.bfloat16)
-model.eval()
+llm = Llama(model_path = LLAMA_MODEL_PATH, n_ctx = 4096, verbose = False)
 
 def generate_raw(job_description, max_new_tokens = 1024):
-    msgs = [{"role":"system","content":EXTRACTION_PROMPT},{"role":"user","content":job_description}]
-
-    text = tokenizer.apply_chat_template(
-        msgs, 
-        add_generation_prompt=True, 
-        tokenize=False
-        )
-
-    inp = tokenizer(text, return_tensors="pt")
-
-    out = model.generate(
-        **inp, max_new_tokens=max_new_tokens, 
-        do_sample=False, 
-        pad_token_id=tokenizer.eos_token_id
-        )
-
-    return tokenizer.decode(out[0][inp["input_ids"].shape[-1]:], skip_special_tokens=True).strip()
+    resp = llm.create_chat_completion(
+        messages = [
+            {'role': 'system', 'content': EXTRACTION_PROMPT},
+            {'role': 'user', 'content': job_description}
+        ],
+        max_tokens = max_new_tokens,
+        temperature = 0.0
+    )
+    return resp['choices'][0]['message']['content'].strip()
 
 def lenient_parse(raw):
     a, b = raw.find("{"), raw.rfind("}")

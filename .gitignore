@@ -222,3 +222,5 @@ CLAUDE.md
 .DS_Store
 
 original_LLM_fine_tuning.ipynb
+# Large model artifacts (baked into Docker image, not git)
+models/
